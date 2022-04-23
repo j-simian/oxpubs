@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "647849507907",
+    "project_id": "oxpubs-629ab",
+    "storage_bucket": "oxpubs-629ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647849507907:android:4c131df739b1353073a8f6",
+        "android_client_info": {
+          "package_name": "com.jsimian.oxpubs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "647849507907-ikd0jnmsmtveveggupud9ebt8gt3557r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMZjR7jAukM3UDZWrwaZ4q2YKstO_CKSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "647849507907-ikd0jnmsmtveveggupud9ebt8gt3557r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "647849507907-3k2t6o3dj553hjdekjdqo2pb3asnqmbh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jsimian.oxpubs"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
