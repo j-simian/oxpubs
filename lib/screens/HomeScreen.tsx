@@ -5,7 +5,7 @@ import { RootStackParamList } from '../consts';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
-const HomeScreen = ({ route, navigation, params }: Props) => {
+const HomeScreen = ({ route, navigation }: Props) => {
 	return (
 		<SafeAreaView>
 			<View>

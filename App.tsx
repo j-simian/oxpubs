@@ -13,12 +13,17 @@ const App = () => {
 	const [ user, setUser ] = useState<FirebaseAuthTypes.User | null>();
 
 	useEffect(() => {
-		auth().onAuthStateChanged( userState => {
+		var unsubscribeAuth = auth().onAuthStateChanged( userState => {
 			setUser(userState);
 			if(firebaseInitialising) {
 				setFirebaseInitialising(false);
 			}
 		} );
+
+
+		return () => {
+			unsubscribeAuth();
+		};
 	});
 
 	const Stack = createNativeStackNavigator<RootStackParamList>();
