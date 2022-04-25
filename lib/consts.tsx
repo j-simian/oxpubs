@@ -61,7 +61,6 @@ export var globalStyles = StyleSheet.create({
 		color: colours.text,
 	},
 	monospaceBlock: {
-		fontFamily: "notoserif",
 		padding: 5,
 		width: 30,
 		textAlign: "right",

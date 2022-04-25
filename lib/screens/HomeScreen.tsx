@@ -11,7 +11,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 const HomeScreen = ({ route, navigation }: Props) => {
 	return (
-		<SafeAreaView>
+		<SafeAreaView style={globalStyles.container}>
 			<View style={styles.container}>
 				<TouchableOpacity 
 					style={styles.floatingButton}
