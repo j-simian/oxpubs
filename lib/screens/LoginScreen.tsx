@@ -8,8 +8,8 @@ import {	Button,
 			View 
 		} from "react-native";
 import auth from '@react-native-firebase/auth';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../consts';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { colours, globalStyles, RootStackParamList } from '../consts';
 import firestore from '@react-native-firebase/firestore';
 
 
@@ -23,9 +23,9 @@ const LoginScreen = ({ navigation }: Props) => {
 	const [ username, setUsername ] = useState("");
 	const [ password, setPassword ] = useState("");
 
-	var emailInput = useRef() as React.RefObject<TextInput>;
-	var passInput = useRef() as React.RefObject<TextInput>;
-	var userInput = useRef() as React.RefObject<TextInput>;
+	const emailInput = useRef() as React.RefObject<TextInput>;
+	const passInput = useRef() as React.RefObject<TextInput>;
+	const userInput = useRef() as React.RefObject<TextInput>;
 
 
 	const usersCollection = firestore().collection('users');
@@ -119,62 +119,73 @@ const LoginScreen = ({ navigation }: Props) => {
 	}
 
 	return (
-		<SafeAreaView style={styles.container}>
+		<SafeAreaView style={globalStyles.container}>
 			{								// Conditionally render username box 
 				signup ?
-				<View style={styles.inputView}>
+				<View style={globalStyles.inputView}>
 					<TextInput 
 						ref={userInput}
-						style={styles.textInput}
+						style={globalStyles.textInput}
 						placeholder="username"
+						placeholderTextColor={ colours.primaryLight }
 						onChangeText={ text => setUsername(text) }
 					/>
 				</View>
 				: <></>
 			}
-			<View style={styles.inputView}>
+			<View style={globalStyles.inputView}>
 				<TextInput 
 					ref={emailInput}
-					style={styles.textInput}
+					style={globalStyles.textInput}
 					placeholder="email"
+					placeholderTextColor={ colours.primaryLight }
 					onChangeText={ text => setEmail(text) }
 				/>
 			</View>
-		<View style={styles.inputView}>
+		<View style={globalStyles.inputView}>
 				<TextInput 
 					ref={passInput}
-					style={styles.textInput}
+					style={globalStyles.textInput}
 					placeholder="password"
+					placeholderTextColor={ colours.primaryLight }
 					secureTextEntry={true}
 					onChangeText={ text => setPassword(text) }
 				/>
 			</View>
 			{								// Conditionally render error label
 				error == "" ? <></> : 
-				<View style={styles.inputView}>
+				<View style={globalStyles.inputView}>
 					<Text style={styles.incorrect}>{ error }</Text>
 				</View>
 			}
 			<TouchableOpacity style={styles.forgotButton}>
-				<Text>forgot password?</Text>
+				<Text style={{color: colours.text}}>
+					forgot password?
+				</Text>
 			</TouchableOpacity>
 			<TouchableOpacity 
 				style={styles.forgotButton}
 				onPress={ toggleSignup }
 			>
-				<Text>
+				<Text style={{color: colours.text}}>
 				{
 					signup ? "log in instead" : "register a new account"
 				}
 				</Text>
 			</TouchableOpacity>
-			<Button 
-				title={ signup ? "register" : "login" }
+			<TouchableOpacity
+				style={globalStyles.submitButton}
 				onPress={ () => { 
 					signup	? attemptSignup(email, username, password) 
 							: attemptLogin(email, password) } 
 						}
-			/>
+			>
+				<Text style={globalStyles.buttonText}>
+				{
+					signup ? "register" : "login"
+				}
+				</Text>
+			</TouchableOpacity>
 		</SafeAreaView>
    );
 };
@@ -183,28 +194,12 @@ const styles = StyleSheet.create({
 	incorrect: {
 		color: "red",
 	},
-	container: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		width: "100%",
-	},
-	inputView: {
-		width: "80%",
-		alignItems: "center",
-		height: 45,
-		marginBottom: 10,
-	},
-	textInput: {
-		width: "100%",
-		flex: 1,
-		padding: 10,
-	},
 	forgotButton: {
 		height: 20,
 		marginLeft: "auto",
 		marginRight: "auto",
-		marginBottom: 30,
+		marginBottom: 20,
+		color: colours.text,
 	},
 });
 

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import auth, { firebase, FirebaseAuthTypes } from '@react-native-firebase/auth';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import LoginScreen from './lib/screens/LoginScreen';
 import HomeScreen from './lib/screens/HomeScreen';
+import AddScreen from './lib/screens/AddScreen';
 import { RootStackParamList } from './lib/consts';
 
 const App = () => {
@@ -20,7 +21,6 @@ const App = () => {
 			}
 		} );
 
-
 		return () => {
 			unsubscribeAuth();
 		};
@@ -30,9 +30,10 @@ const App = () => {
 
 	return (
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName="Login">
+			<Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
 				<Stack.Screen name="Login" component={LoginScreen} />
 				<Stack.Screen name="Home" component={HomeScreen} />
+				<Stack.Screen name="Add" component={AddScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
