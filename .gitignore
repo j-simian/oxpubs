@@ -64,3 +64,4 @@ buck-out/
 /android/app/src/main/AndroidManifest.xml
 /ios/oxpubs/GoogleService-Info.plist
 /ios/oxpubs/AppDelegate.mm
+/ios/GoogleService-Info.plist
