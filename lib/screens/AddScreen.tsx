@@ -25,14 +25,13 @@ const AddScreen = ({ route, navigation }: Props) => {
 
 	const nameInput = useRef() as React.RefObject<TextInput>;
 
-	function addPub(name: string) {
+	function addPub() {
 		pubCollection.add({
-			name: name,
+			name: pubName,
 			lat: markerLoc.latitude,
 			long: markerLoc.longitude,
 		});
 		visitsCollection.add({
-			
 		});
 
 		navigation.navigate("Home", { userId: route.params.userId });
@@ -52,7 +51,9 @@ const AddScreen = ({ route, navigation }: Props) => {
 						ref={nameInput}	
 					/>
 				</View>
-				<Text style={styles.label}>location</Text>
+				<View style={styles.labelContainer}>
+					<Text style={styles.label}>location</Text>
+				</View>
 				<View style={styles.mapContainer}>
 					<MapView 
 						provider={ PROVIDER_GOOGLE } // remove if not using Google Maps
@@ -83,13 +84,29 @@ const AddScreen = ({ route, navigation }: Props) => {
 					</MapView>
 				</View>
 				<View style={styles.sliderContainer}>
-					<Text style={styles.label}>vibes</Text>
+					<View style={styles.labelContainer}>
+						<Text style={styles.label}>vibes:</Text> 
+						<Text style={globalStyles.monospaceBlock}>{vibes}</Text>
+					</View>
 					<Slider 
 						value={vibes}	
 						minimumValue={0}
 						maximumValue={10}
 						step={1}
 						trackClickable={true}
+						trackMarks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+						renderTrackMarkComponent={ e => {
+							return (
+							<View style={{ 
+								width: 5, 
+								height: 10, 
+								marginLeft: 8,
+								backgroundColor: e >= vibes ? colours.primaryXLight : colours.primary
+								}}>
+							</View>
+							);
+						}}
+						trackStyle={{ marginLeft: 8, marginRight: 8 }}
 						thumbTintColor={colours.primary}
 						minimumTrackTintColor={colours.primary}
 						maximumTrackTintColor={colours.primaryXLight}
@@ -98,7 +115,7 @@ const AddScreen = ({ route, navigation }: Props) => {
 				</View>
 				<TouchableOpacity 
 					style={globalStyles.submitButton}
-					onPress={ () => addPub(pubName) }
+					onPress={ () => addPub() }
 				>
 					<Text style={globalStyles.buttonText}>add pub</Text>
 				</TouchableOpacity>
@@ -137,10 +154,17 @@ const styles = StyleSheet.create({
 		alignItems: "stretch",
 		justifyContent: "center"
 	},
-	label: {
+	labelContainer: {
 		marginTop: 15,
+		marginLeft: 10,
+		width: 80*vw+8,
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	label: {
 		color: colours.primaryXLight,
-		width: 75*vw,
+		flex: 1
 	}
 });
 

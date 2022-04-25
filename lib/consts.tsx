@@ -59,5 +59,18 @@ export var globalStyles = StyleSheet.create({
 	},
 	buttonText: {
 		color: colours.text,
+	},
+	monospaceBlock: {
+		fontFamily: "notoserif",
+		padding: 5,
+		width: 30,
+		textAlign: "right",
+		marginRight: 30,
+		backgroundColor: colours.primaryLight,
+		color: colours.bg,
+		borderWidth: 1,
+		borderColor: colours.primary,
+		borderRadius: 8,
+		overflow: "hidden",
 	}
 });
