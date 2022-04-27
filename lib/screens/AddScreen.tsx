@@ -135,13 +135,13 @@ const styles = StyleSheet.create({
 		backgroundColor: colours.bg,
 	},
 	map: {
-		width: 80*vw,
-		height: 80*vw,
+		width: 85*vw,
+		height: 85*vw,
 	},
 	mapContainer: {
 		borderRadius: 15,
-		width: 80*vw,
-		height: 80*vw,
+		width: 85*vw,
+		height: 85*vw,
 		margin: 10,
 		overflow: "hidden",
 		borderWidth: 2,
