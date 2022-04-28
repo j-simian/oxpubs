@@ -13,9 +13,14 @@ const App = () => {
 	const [ firebaseInitialising, setFirebaseInitialising ] = useState(true);
 	const [ user, setUser ] = useState<FirebaseAuthTypes.User | null>();
 
+	var initialRoute: keyof RootStackParamList = "Login";
+
 	useEffect(() => {
 		var unsubscribeAuth = auth().onAuthStateChanged( userState => {
 			setUser(userState);
+			if(user) {
+				initialRoute = "Home";
+			}
 			if(firebaseInitialising) {
 				setFirebaseInitialising(false);
 			}
@@ -30,7 +35,7 @@ const App = () => {
 
 	return (
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+			<Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
 				<Stack.Screen name="Login" component={LoginScreen} />
 				<Stack.Screen name="Home" component={HomeScreen} />
 				<Stack.Screen name="Add" component={AddScreen} />

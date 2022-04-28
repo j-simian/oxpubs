@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {	Button, 
 			SafeAreaView, 
 			StyleSheet, 
@@ -7,7 +7,7 @@ import {	Button,
 			TouchableOpacity, 
 			View 
 		} from "react-native";
-import auth from '@react-native-firebase/auth';
+import auth, {firebase} from '@react-native-firebase/auth';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { colours, globalStyles, RootStackParamList } from '../consts';
 import firestore from '@react-native-firebase/firestore';
@@ -28,7 +28,14 @@ const LoginScreen = ({ navigation }: Props) => {
 	const userInput = useRef() as React.RefObject<TextInput>;
 
 
+	const user = firebase.auth().currentUser;
 	const usersCollection = firestore().collection('users');
+
+	useEffect(() => {
+		if(user) {
+			navigation.navigate("Home", { userId: user.uid });
+		}
+	});
 
 	function toggleSignup() {
 		setUsername("");
@@ -140,6 +147,7 @@ const LoginScreen = ({ navigation }: Props) => {
 					placeholder="email"
 					placeholderTextColor={ colours.primaryLight }
 					onChangeText={ text => setEmail(text) }
+					autoCorrect={false}
 				/>
 			</View>
 		<View style={globalStyles.inputView}>

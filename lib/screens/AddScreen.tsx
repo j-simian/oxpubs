@@ -1,10 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { SafeAreaView, StatusBar, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
+import { Alert, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
 import { colours, RootStackParamList, vw, vh, globalStyles } from "../consts";
-import firestore from "@react-native-firebase/firestore";
+import firestore, {FirebaseFirestoreTypes} from "@react-native-firebase/firestore";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Slider } from '@miblanchard/react-native-slider';
+import TextPicker from "../components/TextPicker";
+import Back from "../components/Back";
+import Fuse from "fuse.js";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Add">;
 
@@ -25,6 +28,26 @@ const AddScreen = ({ route, navigation }: Props) => {
 
 	const nameInput = useRef() as React.RefObject<TextInput>;
 
+	var pubs;
+	var fuse: Fuse<FirebaseFirestoreTypes.DocumentData>;
+	var [ dataFiltered, setDataFiltered ] = useState<string[]>([]);
+	
+	useEffect(() => {
+		getPubs();
+	});
+
+	async function getPubs() {
+		pubs = await firestore().collection("pubs").get();
+		fuse = new Fuse(pubs.docs.map( x => x.data() ), { keys: ["name"] });
+		setDataFiltered( pubs.docs.map( x => x.data().name ) );
+	}
+
+	function textModified(value: string) {
+		console.info(value);
+		setPubName(value);
+		setDataFiltered(fuse?.search(value).map(x => x.item.name));
+	}
+
 	function addPub() {
 		pubCollection.add({
 			name: pubName,
@@ -33,24 +56,21 @@ const AddScreen = ({ route, navigation }: Props) => {
 		});
 		visitsCollection.add({
 		});
-
 		navigation.navigate("Home", { userId: route.params.userId });
 	}
 
 	return (
 		<>
-		<StatusBar barStyle="dark-content" />
+		<StatusBar barStyle="light-content" />
 		<SafeAreaView style={globalStyles.container}>
+			<Back navigation={navigation} />
 			<View style={styles.container}>
-				<View style={globalStyles.inputView}>
-					<TextInput 
-						style={globalStyles.textInput} 
-						placeholder="name"
-						placeholderTextColor={ colours.primaryLight }
-						onChangeText={ text => { setPubName(text) } }
-						ref={nameInput}	
-					/>
-				</View>
+				<TextPicker 
+					placeholder="name"
+					data={ dataFiltered }
+					value={ pubName }
+					stateCallback={ textModified }
+				/>
 				<View style={styles.labelContainer}>
 					<Text style={styles.label}>location</Text>
 				</View>

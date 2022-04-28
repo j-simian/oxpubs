@@ -46,7 +46,7 @@ export var globalStyles = StyleSheet.create({
 		width: "100%",
 		flex: 1,
 		padding: 10,
-		color: colours.primaryXLight,
+		color: colours.text,
 	},
 	submitButton: {
 		backgroundColor: colours.secondary,
