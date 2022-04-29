@@ -44,7 +44,6 @@ export var globalStyles = StyleSheet.create({
 	},
 	textInput: {
 		width: "100%",
-		flex: 1,
 		padding: 10,
 		color: colours.text,
 	},
@@ -71,5 +70,5 @@ export var globalStyles = StyleSheet.create({
 		borderColor: colours.primary,
 		borderRadius: 8,
 		overflow: "hidden",
-	}
+	},
 });

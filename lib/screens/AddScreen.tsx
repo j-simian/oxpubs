@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { Alert, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
+import { Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
 import { colours, RootStackParamList, vw, vh, globalStyles } from "../consts";
 import firestore, {FirebaseFirestoreTypes} from "@react-native-firebase/firestore";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -64,7 +64,7 @@ const AddScreen = ({ route, navigation }: Props) => {
 		<StatusBar barStyle="light-content" />
 		<SafeAreaView style={globalStyles.container}>
 			<Back navigation={navigation} />
-			<View style={styles.container}>
+			<ScrollView contentContainerStyle={styles.container} style={{width:"100%"}}>
 				<TextPicker 
 					placeholder="name"
 					data={ dataFiltered }
@@ -130,7 +130,9 @@ const AddScreen = ({ route, navigation }: Props) => {
 						thumbTintColor={colours.primary}
 						minimumTrackTintColor={colours.primary}
 						maximumTrackTintColor={colours.primaryXLight}
-						onValueChange={ value => {setVibes(value)} }
+						onValueChange={ value => {
+							setVibes(Array.isArray(value) ? value[0] : value);
+						} }
 					/>
 				</View>
 				<TouchableOpacity 
@@ -139,7 +141,7 @@ const AddScreen = ({ route, navigation }: Props) => {
 				>
 					<Text style={globalStyles.buttonText}>add pub</Text>
 				</TouchableOpacity>
-			</View>
+			</ScrollView>
 		</SafeAreaView>
 		</>
 	);

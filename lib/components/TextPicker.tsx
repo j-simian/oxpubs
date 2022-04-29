@@ -19,7 +19,7 @@ const TextPicker = ({ placeholder, data, value, stateCallback }: Props) => {
 		<View 
 			style={[
 				styles.textPickerContainer, 
-				{borderBottomWidth: listVisible ? 1 : 2}
+				{borderBottomWidth: listVisible ? 0 : 2}
 			]}
 		>
 			<TextInput
@@ -39,10 +39,11 @@ const TextPicker = ({ placeholder, data, value, stateCallback }: Props) => {
 			>
 				{ data?.map((item) => (
 					<TouchableOpacity 
+						key={item}
 						style={styles.listItem}
 						onPress={ () => { 
-							stateCallback(item);
 							setListVisible(false); 
+							stateCallback(item);
 						} }
 					>
 						<Text style={styles.listText}>{ item }</Text>
