@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
 	back: {
 		alignSelf: "flex-start",
 		marginLeft: 30,
-		marginTop: 30,
 	}
 });
 

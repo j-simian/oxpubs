@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {	Button, 
 			SafeAreaView, 
+			StatusBar, 
 			StyleSheet, 
 			Text, 
 			TextInput, 
@@ -126,6 +127,8 @@ const LoginScreen = ({ navigation }: Props) => {
 	}
 
 	return (
+		<>
+		<StatusBar backgroundColor={ colours.bg } barStyle="light-content" />
 		<SafeAreaView style={globalStyles.container}>
 			{								// Conditionally render username box 
 				signup ?
@@ -195,6 +198,7 @@ const LoginScreen = ({ navigation }: Props) => {
 				</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
+		</>
    );
 };
 

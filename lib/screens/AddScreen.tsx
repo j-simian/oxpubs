@@ -61,7 +61,7 @@ const AddScreen = ({ route, navigation }: Props) => {
 
 	return (
 		<>
-		<StatusBar barStyle="light-content" />
+		<StatusBar backgroundColor={ colours.bg } barStyle="light-content" />
 		<SafeAreaView style={globalStyles.container}>
 			<Back navigation={navigation} />
 			<ScrollView contentContainerStyle={styles.container} style={{width:"100%"}}>

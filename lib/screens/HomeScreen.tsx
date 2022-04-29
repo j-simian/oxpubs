@@ -3,7 +3,8 @@ import React, {useId} from 'react';
 import	{	View, 
 			SafeAreaView, 
 			TouchableOpacity, 
-			StyleSheet } from "react-native";
+			StyleSheet, 
+			StatusBar} from "react-native";
 import Plus from "../../assets/plus.svg";
 import FloatingButton from '../components/FloatingButton';
 import { colours, globalStyles, RootStackParamList } from '../consts';
@@ -12,6 +13,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 const HomeScreen = ({ route, navigation }: Props) => {
 	return (
+		<>
+		<StatusBar backgroundColor={ colours.bg } barStyle="light-content" />
 		<SafeAreaView style={globalStyles.container}>
 			<View style={styles.container}>
 				<FloatingButton
@@ -24,6 +27,7 @@ const HomeScreen = ({ route, navigation }: Props) => {
 				/>
 			</View>				
 		</SafeAreaView>
+		</>
     );
 }
 
