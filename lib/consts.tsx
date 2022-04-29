@@ -3,6 +3,10 @@ import { StyleSheet, Dimensions } from "react-native";
 export const vw = Dimensions.get("window").width / 100.0;
 export const vh = Dimensions.get("window").height / 100.0;
 
+export let sleep = (ms: number) => { 
+	new Promise(resolve => setTimeout(resolve, ms)) 
+};
+
 export type RootStackParamList = {
 	Login: undefined;
 	Home: { userId: string };
@@ -39,13 +43,13 @@ export var globalStyles = StyleSheet.create({
 		height: 40,
 		padding: 0,
 		marginBottom: 10,
-		borderBottomWidth: 2,
-		borderBottomColor: colours.primary
 	},
 	textInput: {
 		width: "100%",
 		padding: 10,
 		color: colours.text,
+		borderBottomWidth: 2,
+		borderBottomColor: colours.primary
 	},
 	submitButton: {
 		backgroundColor: colours.secondary,
@@ -54,7 +58,8 @@ export var globalStyles = StyleSheet.create({
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 10
+		borderRadius: 10,
+		marginTop: 15,
 	},
 	buttonText: {
 		color: colours.text,

@@ -36,7 +36,7 @@ const LoginScreen = ({ navigation }: Props) => {
 		if(user) {
 			navigation.navigate("Home", { userId: user.uid });
 		}
-	});
+	}, []);
 
 	function toggleSignup() {
 		setUsername("");
