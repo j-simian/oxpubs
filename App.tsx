@@ -6,6 +6,7 @@ import LoginScreen from './lib/screens/LoginScreen';
 import HomeScreen from './lib/screens/HomeScreen';
 import AddScreen from './lib/screens/AddScreen';
 import { RootStackParamList } from './lib/consts';
+import {LogBox} from 'react-native';
 
 const App = () => {
 
@@ -15,6 +16,9 @@ const App = () => {
 
 	var initialRoute: keyof RootStackParamList = "Login";
 
+	LogBox.ignoreLogs([
+		"exported from 'deprecated-react-native-prop-types'.",
+	]);
 	useEffect(() => {
 		var unsubscribeAuth = auth().onAuthStateChanged( userState => {
 			setUser(userState);

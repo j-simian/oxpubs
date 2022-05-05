@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import firestore, {FirebaseFirestoreTypes} from "@react-native-firebase/firestore";
 
 export const vw = Dimensions.get("window").width / 100.0;
 export const vh = Dimensions.get("window").height / 100.0;
@@ -14,6 +15,13 @@ export type RootStackParamList = {
 };
 
 type Colour = `#${string}`;
+
+
+export async function getPubs(callback: (x: FirebaseFirestoreTypes.QuerySnapshot) => void) {
+	const collection = await firestore().collection("pubs").get();
+	callback(collection);
+}
+
 
 export var colours = {
 	bg: "#002147" as Colour,

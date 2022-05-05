@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
-import { colours, RootStackParamList, vw, vh, globalStyles } from "../consts";
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { getPubs, colours, RootStackParamList, vw, globalStyles } from "../consts";
 import firestore, {FirebaseFirestoreTypes} from "@react-native-firebase/firestore";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Slider } from '@miblanchard/react-native-slider';
@@ -16,15 +16,16 @@ const AddScreen = ({ route, navigation }: Props) => {
 	const initLat = 51.7550;
 	const initLong = -1.2593;
 
+	const [ pubs, setPubs ] = useState<FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData> | null>();
 	const [ pubName, setPubName ] = useState("");
 	const [ markerLoc, setMarkerLoc ] = useState({ 
 													latitude: initLat, 
 													longitude: initLong 
 												 });
-	const [ vibes, setVibes ] = useState(5);
-	const [ pints, setPints ] = useState(0);
-	const [ pubs, setPubs ] = useState<FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData> | null>();
+	const [ mapsID, setMapsID ] = useState("-1");
 	const [ newPub, setNewPub ] = useState(true);
+	const [ vibes, setVibes ] = useState(5);
+	const [ pints, setPints ] = useState(1);
 
 	const pubCollection = firestore().collection('pubs');
 	const visitsCollection = firestore().collection('visits');
@@ -34,16 +35,9 @@ const AddScreen = ({ route, navigation }: Props) => {
 	var [ dataFiltered, setDataFiltered ] = useState<string[]>([]);
 	
 	useEffect(() => {
-		getPubs();
+		getPubs(setPubs);
 	}, []);
 
-	async function getPubs() {
-		const collection = await firestore().collection("pubs").get();
-		setPubs(collection);
-		if(pubs) {
-			setDataFiltered( pubs?.docs.map( x => x.data().name ) );
-		}
-	}
 
 	// searches for pubs with similar names 
 	function textModified(value: string) { 
@@ -68,20 +62,42 @@ const AddScreen = ({ route, navigation }: Props) => {
 	}
 
 	function addPub() {
-		pubCollection.add({
-			name: pubName,
-			lat: markerLoc.latitude,
-			long: markerLoc.longitude,
-		})
-			.then( doc => {
-				visitsCollection.add({
-					pub: doc,
-					vibes: vibes,
-					pints: pints,
-					time: new Date(),
+		if(pubs) {
+			let pubDocumentRef: FirebaseFirestoreTypes.DocumentReference;
+			if(pubs.docs.map( x => x.data().name ).includes(pubName)) {
+				pubCollection.add({
+					name: pubName,
+					lat: markerLoc.latitude,
+					long: markerLoc.longitude,
+					mapsID: mapsID,
+				})
+					.then( doc => {
+						pubDocumentRef = doc;
+					});
+			} else {
+				pubs.docs.map( pub => {
+					if(pub.data().name == pubName) {
+						pubDocumentRef = pub.ref;
+					}
 				});
-			});
+			}
+			if(pubDocumentRef) {
+				addVisit(pubDocumentRef);
+			} else {
+				console.warn("Couldn't find existing pub: " + pubName);
+			}
+
+		}
 		navigation.navigate("Home", { userId: route.params.userId });
+	}
+
+	function addVisit(documentReference: FirebaseFirestoreTypes.DocumentReference) {
+		visitsCollection.add({
+			pub: documentReference,
+			vibes: vibes,
+			pints: pints,
+			time: new Date(),
+		});
 	}
 
 	return (
@@ -116,6 +132,8 @@ const AddScreen = ({ route, navigation }: Props) => {
 								onPoiClick={ e => {
 									setMarkerLoc(e.nativeEvent.coordinate);
 									setPubName(e.nativeEvent.name);
+									textModified(e.nativeEvent.name);
+									setMapsID(e.nativeEvent.placeId);
 									nameInput.current?.setNativeProps(
 										{ text: e.nativeEvent.name }
 									)
@@ -176,11 +194,11 @@ const AddScreen = ({ route, navigation }: Props) => {
 					</View>
 					<Slider 
 						value={pints}	
-						minimumValue={0}
+						minimumValue={1}
 						maximumValue={10}
 						step={1}
 						trackClickable={true}
-						trackMarks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+						trackMarks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
 						renderTrackMarkComponent={ e => {
 							return (
 							<View style={{ 
