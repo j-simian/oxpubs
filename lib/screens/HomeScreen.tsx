@@ -52,6 +52,9 @@ const HomeScreen = ({ route, navigation }: Props) => {
 		if(!pubs) {
 			getPubs(setPubs);
 		}
+		const willFocusSubscription = navigation.addListener('focus', () => {
+			setPubs(null);
+		});	
 	});
 
 	function renderTile({ item, index, separators }) {
