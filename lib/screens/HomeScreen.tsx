@@ -14,7 +14,7 @@ import Plus from "../../assets/plus.svg";
 import FloatingButton from '../components/FloatingButton';
 import { getPubs, colours, globalStyles, RootStackParamList, vw } from '../consts';
 import LinearGradient from "react-native-linear-gradient";
-import image from "../../assets/genPub.jpg";
+import image from "../../assets/no_img.jpg";
 import {MAPS_API_KEY} from '../API_KEY';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
@@ -29,7 +29,7 @@ type Photo = {
 const HomeScreen = ({ route, navigation }: Props) => {
 
 	const [ pubs, setPubs ] = useState<FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData> | null>();
-	const [ images, setImages ] = useState({ undefined: Image.resolveAssetSource(image).uri });
+	const [ images, setImages ] = useState<Map<string, string>>(new Map());
 
 	async function getImage(placeID: string) {
 		var imageData: Photo;
@@ -49,8 +49,10 @@ const HomeScreen = ({ route, navigation }: Props) => {
 
 
 	useEffect( () => {
-		getPubs(setPubs);
-	}, []);
+		if(!pubs) {
+			getPubs(setPubs);
+		}
+	});
 
 	function renderTile({ item, index, separators }) {
 		if(!image[item.data().mapsID]) {
@@ -60,7 +62,11 @@ const HomeScreen = ({ route, navigation }: Props) => {
 					return getImageURI(response);
 				}
 			}).then( response => {
-				setImages({ [item.data().mapsID]: response });
+				if(response) {
+					setImages( images => 
+						(new Map(images.set(item.data().mapsID, response)))
+					);
+				}
 			});
 		}
 		return (
@@ -68,7 +74,8 @@ const HomeScreen = ({ route, navigation }: Props) => {
 				<View style={styles.tile}>
 					<ImageBackground
 						source={{ 
-							uri: images[item.data().mapsID],
+							uri: images.get(item.data().mapsID) || 
+									Image.resolveAssetSource(image).uri
 						}}
 						style={styles.tileImage}
 					>
