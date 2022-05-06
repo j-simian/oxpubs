@@ -63,8 +63,7 @@ const AddScreen = ({ route, navigation }: Props) => {
 
 	function addPub() {
 		if(pubs) {
-			let pubDocumentRef: FirebaseFirestoreTypes.DocumentReference;
-			if(pubs.docs.map( x => x.data().name ).includes(pubName)) {
+			if(!pubs.docs.map( x => x.data().name ).includes(pubName)) {
 				pubCollection.add({
 					name: pubName,
 					lat: markerLoc.latitude,
@@ -72,21 +71,15 @@ const AddScreen = ({ route, navigation }: Props) => {
 					mapsID: mapsID,
 				})
 					.then( doc => {
-						pubDocumentRef = doc;
+						addVisit(doc);
 					});
 			} else {
 				pubs.docs.map( pub => {
 					if(pub.data().name == pubName) {
-						pubDocumentRef = pub.ref;
+						addVisit(pub.ref);
 					}
 				});
 			}
-			if(pubDocumentRef) {
-				addVisit(pubDocumentRef);
-			} else {
-				console.warn("Couldn't find existing pub: " + pubName);
-			}
-
 		}
 		navigation.navigate("Home", { userId: route.params.userId });
 	}

@@ -18,6 +18,7 @@ const App = () => {
 
 	LogBox.ignoreLogs([
 		"exported from 'deprecated-react-native-prop-types'.",
+		"Possible unhandled Promise"
 	]);
 	useEffect(() => {
 		var unsubscribeAuth = auth().onAuthStateChanged( userState => {

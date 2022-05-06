@@ -65,3 +65,4 @@ buck-out/
 /ios/oxpubs/GoogleService-Info.plist
 /ios/oxpubs/AppDelegate.mm
 /ios/GoogleService-Info.plist
+/lib/API_KEY.tsx

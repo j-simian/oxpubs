@@ -17,9 +17,11 @@ export type RootStackParamList = {
 type Colour = `#${string}`;
 
 
-export async function getPubs(callback: (x: FirebaseFirestoreTypes.QuerySnapshot) => void) {
-	const collection = await firestore().collection("pubs").get();
-	callback(collection);
+export function getPubs(callback: (x: FirebaseFirestoreTypes.QuerySnapshot) => void) {
+	const collection = firestore().collection("pubs").get();
+	collection.then( items => {
+		callback(items);
+	});
 }
 
 

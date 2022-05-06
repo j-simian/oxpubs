@@ -15,30 +15,65 @@ import FloatingButton from '../components/FloatingButton';
 import { getPubs, colours, globalStyles, RootStackParamList, vw } from '../consts';
 import LinearGradient from "react-native-linear-gradient";
 import image from "../../assets/genPub.jpg";
+import {MAPS_API_KEY} from '../API_KEY';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
-
+type Photo = {
+	height: number,
+	width: number,
+	html_attributions: string[],
+	photo_reference: string
+}
 
 const HomeScreen = ({ route, navigation }: Props) => {
 
-
 	const [ pubs, setPubs ] = useState<FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData> | null>();
+	const [ images, setImages ] = useState({ undefined: Image.resolveAssetSource(image).uri });
+
+	async function getImage(placeID: string) {
+		var imageData: Photo;
+		if(placeID){
+			let placePromise = await fetch("https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID + "&key=" + MAPS_API_KEY);
+			await placePromise.json().then( json => {
+				imageData = json.result.photos[0];
+			});
+		}
+		return imageData;
+	}
+	
+	async function getImageURI(imageData: Photo) {
+		let image = await fetch("https://maps.googleapis.com/maps/api/place/photo?photo_reference=" + imageData.photo_reference + "&key=" + MAPS_API_KEY + "&maxwidth=" + 80*vw);
+		return image.url;
+	}
+
 
 	useEffect( () => {
 		getPubs(setPubs);
-	});
+	}, []);
 
 	function renderTile({ item, index, separators }) {
+		if(!image[item.data().mapsID]) {
+			const imageData = getImage(item.data().mapsID);
+			imageData.then( response => {
+				if(response){ 
+					return getImageURI(response);
+				}
+			}).then( response => {
+				setImages({ [item.data().mapsID]: response });
+			});
+		}
 		return (
 			<>
 				<View style={styles.tile}>
 					<ImageBackground
-						source={{ uri: Image.resolveAssetSource(image).uri }}
+						source={{ 
+							uri: images[item.data().mapsID],
+						}}
 						style={styles.tileImage}
 					>
 						<LinearGradient
-							colors={["#000000c0", "#00000000"]}
+							colors={["#00000000", "#000000c0"]}
 							style={styles.tileGradient}
 						>
 							<Text style={styles.tileLabel}>
@@ -59,13 +94,14 @@ const HomeScreen = ({ route, navigation }: Props) => {
 				<View style={styles.header}>
 					<Text style={styles.header}> Pubs</Text>
 				</View>
-				<FlatList 
-					contentContainerStyle={styles.listContainer}
-					data={ pubs?.docs }
-					renderItem={renderTile}
-					keyExtractor={ item => item.id }
-				>
-				</FlatList>
+				{ pubs ? 
+					<FlatList 
+						contentContainerStyle={styles.listContainer}
+						data={ pubs?.docs }
+						renderItem={renderTile}
+						keyExtractor={ item => item.id }
+					/>
+				: <Text>couldn't loads pubs</Text>}
 				<FloatingButton
 					onPress={ () => { 
 						navigation.navigate("Add", 
