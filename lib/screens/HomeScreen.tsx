@@ -33,18 +33,32 @@ const HomeScreen = ({ route, navigation }: Props) => {
 
 	async function getImage(placeID: string) {
 		var imageData: Photo;
-		if(placeID){
-			let placePromise = await fetch("https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID + "&key=" + MAPS_API_KEY);
+		if(placeID) {
+			let placePromise = await fetch(
+				"https://maps.googleapis.com/maps/api/place/details/json" + 
+				"?place_id=" + placeID + 
+				"&key=" + MAPS_API_KEY +
+				"&fields=photo"
+			);
 			await placePromise.json().then( json => {
-				imageData = json.result.photos[0];
+				if(json?.result?.photos) {
+					imageData = json.result.photos[0];
+				}
 			});
 		}
 		return imageData;
 	}
 	
 	async function getImageURI(imageData: Photo) {
-		let image = await fetch("https://maps.googleapis.com/maps/api/place/photo?photo_reference=" + imageData.photo_reference + "&key=" + MAPS_API_KEY + "&maxwidth=" + 80*vw);
-		return image.url;
+		if(imageData) {
+			let image = await fetch(
+				"https://maps.googleapis.com/maps/api/place/photo" + 
+				"?photo_reference=" + imageData.photo_reference +
+				"&key=" + MAPS_API_KEY + 
+				"&maxwidth=" + Math.floor(80*vw)
+			);
+			return image.url;
+		}
 	}
 
 
@@ -58,7 +72,7 @@ const HomeScreen = ({ route, navigation }: Props) => {
 	});
 
 	function renderTile({ item, index, separators }) {
-		if(!image[item.data().mapsID]) {
+		if(typeof images.get(item.data().mapsID) == "undefined") {
 			const imageData = getImage(item.data().mapsID);
 			imageData.then( response => {
 				if(response){ 
@@ -66,6 +80,7 @@ const HomeScreen = ({ route, navigation }: Props) => {
 				}
 			}).then( response => {
 				if(response) {
+					console.log(response);
 					setImages( images => 
 						(new Map(images.set(item.data().mapsID, response)))
 					);
@@ -77,8 +92,8 @@ const HomeScreen = ({ route, navigation }: Props) => {
 				<View style={styles.tile}>
 					<ImageBackground
 						source={{ 
-							uri: images.get(item.data().mapsID) || 
-									Image.resolveAssetSource(image).uri
+							uri: images.get(item.data().mapsID) 
+									|| Image.resolveAssetSource(image).uri
 						}}
 						style={styles.tileImage}
 					>

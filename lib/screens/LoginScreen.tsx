@@ -166,7 +166,7 @@ const LoginScreen = ({ navigation }: Props) => {
 			{								// Conditionally render error label
 				error == "" ? <></> : 
 				<View style={globalStyles.inputView}>
-					<Text style={styles.incorrect}>{ error }</Text>
+					<Text style={globalStyles.incorrect}>{ error }</Text>
 				</View>
 			}
 			<TouchableOpacity style={styles.forgotButton}>
@@ -203,9 +203,6 @@ const LoginScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-	incorrect: {
-		color: "red",
-	},
 	forgotButton: {
 		height: 20,
 		marginLeft: "auto",
